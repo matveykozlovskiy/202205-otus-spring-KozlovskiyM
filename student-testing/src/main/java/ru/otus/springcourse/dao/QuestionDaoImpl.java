@@ -15,8 +15,8 @@ public class QuestionDaoImpl implements QuestionDao {
 
     private final FileHandlerServiceImpl fileHandler;
 
-    public QuestionDaoImpl(FileHandlerServiceImpl fileHandlerCsv) {
-        this.fileHandler = fileHandlerCsv;
+    public QuestionDaoImpl(FileHandlerServiceImpl fileHandler) {
+        this.fileHandler = fileHandler;
     }
 
     public List<Question> getQuestions() {
