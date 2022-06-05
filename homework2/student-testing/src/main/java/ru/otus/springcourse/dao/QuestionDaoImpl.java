@@ -2,7 +2,9 @@ package ru.otus.springcourse.dao;
 
 import org.springframework.stereotype.Component;
 import ru.otus.springcourse.domain.Question;
-import ru.otus.springcourse.service.FileHandlerServiceImpl;
+import ru.otus.springcourse.exceptions.QuestionFileNotFoundException;
+import ru.otus.springcourse.exceptions.QuestionIOException;
+import ru.otus.springcourse.service.FileHandlerService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -13,19 +15,12 @@ import java.util.List;
 @Component
 public class QuestionDaoImpl implements QuestionDao {
     private final List<Question> questionList = new ArrayList<>();
-    private final FileHandlerServiceImpl fileHandler;
+    private final FileHandlerService fileHandler;
 
-    public QuestionDaoImpl(FileHandlerServiceImpl fileHandler) {
+    public QuestionDaoImpl(FileHandlerService fileHandler) {
         this.fileHandler = fileHandler;
     }
 
-    public void setPersonAnswer(int id, String personAnswer) {
-        int questionId = id - 1;
-        Question question = questionList.get(questionId);
-        question.setPersonAnswer(personAnswer);
-        questionList.set(questionId, question);
-
-    }
     public List<Question> getQuestions() {
         String line = "";
         try {
@@ -36,9 +31,9 @@ public class QuestionDaoImpl implements QuestionDao {
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new QuestionFileNotFoundException("Could not find file with questions");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new QuestionIOException("Error reading questions");
         } finally {
           return questionList;
         }

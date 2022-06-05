@@ -10,15 +10,17 @@ import java.util.List;
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao dao;
+    private final int countToPassExam;
+    private final IOService ioService;
+    private final PersonService personService;
 
-    @Value("${count.to.pass.exam}")
-    private int countToPassExam;
-
-    private final ConsoleWriterServiceImpl writer;
-
-    public QuestionServiceImpl(QuestionDao dao, ConsoleWriterServiceImpl writer) {
+    public QuestionServiceImpl(QuestionDao dao,
+                               @Value("${count.to.pass.exam}") int countToPassExam,
+                               IOService ioService, PersonService personService) {
         this.dao = dao;
-        this.writer = writer;
+        this.countToPassExam = countToPassExam;
+        this.ioService = ioService;
+        this.personService = personService;
     }
 
     private boolean IsAnswerCorrect(String personAnswer, String correctAnswer) {
@@ -32,9 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
         for (Question question : questionList) {
             int questionId = question.getId();
 
-            String personAnswer = writer.printAndRead(questionId + " question is: " + question.getText());
-
-            dao.setPersonAnswer(questionId, personAnswer);
+            String personAnswer = ioService.printAndRead(questionId + " question is: " + question.getText());
 
             if (IsAnswerCorrect(personAnswer, question.getCorrectAnswer())) {
                 counter++;
@@ -42,10 +42,12 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         if (counter >= countToPassExam) {
-            writer.print("Congratulations, you have successfully completed the questions");
+            ioService.print("Congratulations, " + personService.requestPersonInfo() +
+                    " you have successfully completed the questions");
 
         } else {
-            writer.print("You made a mistake, try again");
+            ioService.print("You made a mistake, " + personService.requestPersonInfo() +
+                    " try again");
         }
     }
 }

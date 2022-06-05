@@ -1,24 +1,26 @@
 package ru.otus.springcourse.service;
 
 import org.springframework.stereotype.Service;
-import ru.otus.springcourse.dao.PersonDao;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private final ConsoleWriterServiceImpl writer;
-    private final PersonDao dao;
+    private final IOService ioService;
+    private String firstName;
+    private String lastName;
 
-    public PersonServiceImpl(ConsoleWriterServiceImpl writer, PersonDao dao) {
-        this.writer = writer;
-        this.dao = dao;
+    public PersonServiceImpl(IOService ioService) {
+        this.ioService = ioService;
+    }
+
+    public String requestPersonInfo() {
+        return firstName + " " + lastName;
     }
 
     @Override
     public void findOutName() {
-        String firstName = writer.printAndRead("Enter your first name please: ");
-        String lastName = writer.printAndRead("Enter your last name please: ");
-        dao.save(firstName, lastName);
-        writer.print("Hello " + firstName + " " + lastName);
+        firstName = ioService.printAndRead("Enter your first name please: ");
+        lastName = ioService.printAndRead("Enter your last name please: ");
+        ioService.print("Hello " + requestPersonInfo());
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import ru.otus.springcourse.service.ConsoleWriterService;
+import ru.otus.springcourse.service.ApplicationRunner;
 import ru.otus.springcourse.service.PersonService;
 import ru.otus.springcourse.service.QuestionService;
 
@@ -19,7 +19,7 @@ public class Main {
 
         QuestionService questionService = context.getBean(QuestionService.class);
         PersonService personService = context.getBean(PersonService.class);
-        personService.findOutName();
-        questionService.startQuestions();
+
+        new ApplicationRunner(personService, questionService).run();
     }
 }

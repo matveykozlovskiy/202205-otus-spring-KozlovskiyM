@@ -1,6 +1,6 @@
 package ru.otus.springcourse.service;
 
-public interface ConsoleWriterService {
+public interface IOService {
 
     void print(String line);
 
