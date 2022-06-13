@@ -1,8 +1,8 @@
 package ru.otus.springcourse.service;
 
-public interface PersonService {
-    void findOutName();
+import ru.otus.springcourse.domain.Person;
 
-    String requestPersonInfo();
+public interface PersonService {
+    Person requestPersonInfo();
 
 }

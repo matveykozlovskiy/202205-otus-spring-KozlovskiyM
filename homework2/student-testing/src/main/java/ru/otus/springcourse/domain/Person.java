@@ -3,12 +3,10 @@ package ru.otus.springcourse.domain;
 public class Person {
     private String firstName;
     private String lastName;
-    private int id;
 
-    public Person(String firstName, String lastName, int id) {
+    public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -27,11 +25,8 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return  firstName + " " + lastName;
     }
 }

@@ -3,6 +3,7 @@ package ru.otus.springcourse.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.springcourse.dao.QuestionDao;
+import ru.otus.springcourse.domain.Person;
 import ru.otus.springcourse.domain.Question;
 
 import java.util.List;
@@ -12,42 +13,50 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao dao;
     private final int countToPassExam;
     private final IOService ioService;
-    private final PersonService personService;
 
     public QuestionServiceImpl(QuestionDao dao,
                                @Value("${count.to.pass.exam}") int countToPassExam,
-                               IOService ioService, PersonService personService) {
+                               IOService ioService) {
         this.dao = dao;
         this.countToPassExam = countToPassExam;
         this.ioService = ioService;
-        this.personService = personService;
     }
 
-    private boolean IsAnswerCorrect(String personAnswer, String correctAnswer) {
+    private boolean isAnswerCorrect(String personAnswer, String correctAnswer) {
         return personAnswer.trim().equalsIgnoreCase(correctAnswer.trim());
     }
 
+    private void checkIsExamPassedFor(Person person, int countCorrectAnswer) {
+        if (countCorrectAnswer >= countToPassExam) {
+            ioService.print("Congratulations, " + person.toString() +
+                    " you have successfully completed the questions");
+
+        } else {
+            ioService.print("You made a mistake, " + person.toString() +
+                    " try again");
+        }
+    }
+
+    private void provideInfoAboutExamFor(Person person) {
+        ioService.print("Hello, " + person.toString() +
+                " you need to answer questions. To pass the exam, you need to answer " + countToPassExam + " questions correctly");
+    }
+
     @Override
-    public void startQuestions() {
+    public void startQuestionsFor(Person person) {
+        provideInfoAboutExamFor(person);
+
         List<Question> questionList = dao.getQuestions();
-        int counter = 0;
+        int countCorrectAnswer = 0;
         for (Question question : questionList) {
             int questionId = question.getId();
 
             String personAnswer = ioService.printAndRead(questionId + " question is: " + question.getText());
 
-            if (IsAnswerCorrect(personAnswer, question.getCorrectAnswer())) {
-                counter++;
+            if (isAnswerCorrect(personAnswer, question.getCorrectAnswer())) {
+                countCorrectAnswer++;
             }
         }
-
-        if (counter >= countToPassExam) {
-            ioService.print("Congratulations, " + personService.requestPersonInfo() +
-                    " you have successfully completed the questions");
-
-        } else {
-            ioService.print("You made a mistake, " + personService.requestPersonInfo() +
-                    " try again");
-        }
+        checkIsExamPassedFor(person, countCorrectAnswer);
     }
 }

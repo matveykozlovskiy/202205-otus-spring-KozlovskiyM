@@ -1,8 +1,6 @@
 package ru.otus.springcourse.exceptions;
 
-import java.io.FileNotFoundException;
-
-public class QuestionFileNotFoundException extends FileNotFoundException {
+public class QuestionFileNotFoundException extends RuntimeException {
     public QuestionFileNotFoundException(String s) {
         super(s);
     }

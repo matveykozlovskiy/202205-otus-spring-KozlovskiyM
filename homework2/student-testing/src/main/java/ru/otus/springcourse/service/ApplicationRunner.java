@@ -1,5 +1,9 @@
 package ru.otus.springcourse.service;
 
+import org.springframework.stereotype.Service;
+import ru.otus.springcourse.domain.Person;
+
+@Service
 public class ApplicationRunner {
 
     private final PersonService personService;
@@ -11,7 +15,7 @@ public class ApplicationRunner {
     }
 
     public void run() {
-        personService.findOutName();
-        questionService.startQuestions();
+        Person person = personService.requestPersonInfo();
+        questionService.startQuestionsFor(person);
     }
 }

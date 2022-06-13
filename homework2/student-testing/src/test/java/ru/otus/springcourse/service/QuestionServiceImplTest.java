@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
 import ru.otus.springcourse.dao.QuestionDao;
+import ru.otus.springcourse.domain.Person;
 import ru.otus.springcourse.domain.Question;
 
 import java.util.ArrayList;
@@ -22,25 +22,22 @@ import static org.mockito.Mockito.times;
 class QuestionServiceImplTest {
     @Mock
     private IOService ioService;
-    @Mock
-    private PersonService personService;
-
-    @Value("${count.to.pass.exam}")
-    private int countToPassExam;
 
     @DisplayName("startQuestions return some question")
     @Test
     void startQuestions() {
+        int countToPassExam = 1;
         List<Question> questionList = new ArrayList<>();
         questionList.add(0, new Question(1, "1", "1"));
 
         QuestionDao questionDao = mock(QuestionDao.class);
+        Person person = mock(Person.class);
         when(questionDao.getQuestions()).thenReturn(questionList);
 
-        QuestionService questionService = new QuestionServiceImpl(questionDao, countToPassExam, ioService, personService);
+        QuestionService questionService = new QuestionServiceImpl(questionDao, countToPassExam, ioService);
         given(ioService.printAndRead(any())).willReturn(String.valueOf(Optional.of("1")));
 
-        questionService.startQuestions();
+        questionService.startQuestionsFor(person);
 
         verify(ioService, times(1)).printAndRead("1 question is: 1");
     }
