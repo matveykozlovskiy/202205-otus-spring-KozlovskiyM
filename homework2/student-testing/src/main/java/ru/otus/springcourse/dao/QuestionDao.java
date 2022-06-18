@@ -7,6 +7,5 @@ import ru.otus.springcourse.exceptions.QuestionIOException;
 import java.util.List;
 
 public interface QuestionDao {
-    List<Question> getQuestions() throws QuestionIOException, QuestionFileNotFoundException;
-
+    List<Question> getQuestions();
 }
