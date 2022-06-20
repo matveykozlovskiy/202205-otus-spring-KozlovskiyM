@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("application")
 @Component
 public class ApplicationConfig implements LocaleConfig, FileConfig{
-    private String localeCode;
+    private String localeCode = "en-US";
 
     public String getLocaleCode() {
         return localeCode;
@@ -17,6 +17,6 @@ public class ApplicationConfig implements LocaleConfig, FileConfig{
     }
 
     public String getFileName(){
-        return "questions_"+ localeCode+ ".csv";
+        return "questions_"+ localeCode.substring(0,2) + ".csv";
     }
 }

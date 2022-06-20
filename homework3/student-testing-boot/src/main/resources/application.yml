@@ -1,6 +1,3 @@
 application:
-  file-name:
-    en: questions.csv
-    ru: questions_ru_RU.csv
-  locale-code: en
+  locale-code: "ru-RU"
   count-to-pass-exam: 5
