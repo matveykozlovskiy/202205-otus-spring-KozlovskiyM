@@ -1,0 +1,7 @@
+application:
+  locale-code: "ru-RU"
+  count-to-pass-exam: 5
+
+spring:
+  main:
+    allow-circular-references: true
