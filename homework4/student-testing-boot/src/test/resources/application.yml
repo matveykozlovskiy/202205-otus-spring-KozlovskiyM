@@ -1,0 +1,10 @@
+application:
+  count-to-pass-exam: 1
+
+spring:
+  main:
+    allow-circular-references: true
+
+  shell:
+    interactive:
+      enabled: false
