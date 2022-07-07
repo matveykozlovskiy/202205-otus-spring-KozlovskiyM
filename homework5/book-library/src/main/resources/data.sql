@@ -1,5 +1,5 @@
-insert into authors (id, firstname, middlename, lastname)
-values (1, 'Mario', 'Gianluigi', 'Puzo');
+insert into authors (firstname, middlename, lastname)
+values ('Mario', 'Gianluigi', 'Puzo');
 
-insert into genres (id, name)
-values(1, 'Novel');
+insert into genres (name)
+values('Novel');

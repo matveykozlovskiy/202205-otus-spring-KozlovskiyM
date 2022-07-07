@@ -5,7 +5,9 @@ import ru.otus.spring.domain.Author;
 import java.util.List;
 
 public interface AuthorDao {
-    void insert(Author author);
+    long insert(Author author);
 
     List<Author> getAll();
+
+    Author getById(long id);
 }

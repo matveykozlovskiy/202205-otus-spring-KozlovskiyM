@@ -5,7 +5,8 @@ import ru.otus.spring.domain.Genre;
 import java.util.List;
 
 public interface GenreDao {
-    void insert(Genre genre);
-
+    long insert(Genre genre);
     List<Genre> getAll();
+
+    Genre getById(long id);
 }

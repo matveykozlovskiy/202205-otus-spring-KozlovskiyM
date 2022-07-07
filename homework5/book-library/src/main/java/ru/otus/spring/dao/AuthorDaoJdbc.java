@@ -1,7 +1,10 @@
 package ru.otus.spring.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Author;
 
@@ -20,17 +23,31 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public void insert(Author author) {
-        namedParameterJdbcOperations.update("insert into authors(id, firstname, middlename, lastname) " +
-                        "values (:id, :firstname, :middlename, :lastname)"
-                , Map.of("id", author.id(), "firstname", author.firstName(), "middlename", author.middleName()
-                        , "lastname", author.lastName()));
+    public long insert(Author author) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("firstname", author.getFirstName());
+        params.addValue("middlename", author.getMiddleName());
+        params.addValue("lastname", author.getLastName());
+
+        KeyHolder kh = new GeneratedKeyHolder();
+
+        namedParameterJdbcOperations.update("insert into authors (firstname, middlename, lastname) values ( :firstname, :middlename, :lastname); "
+                , params, kh);
+
+        return kh.getKey().longValue();
     }
 
     @Override
     public List<Author> getAll() {
         return namedParameterJdbcOperations.query("select id, firstname, middlename, lastname from authors", new AuthorMapper());
     }
+
+    @Override
+    public Author getById(long id) {
+        return namedParameterJdbcOperations.queryForObject("select id, firstname, middlename, lastname from authors where id = :id"
+                , Map.of("id", id), new AuthorMapper());
+    }
+
 
     private static class AuthorMapper implements RowMapper<Author> {
 
