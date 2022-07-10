@@ -29,7 +29,7 @@ public class GenreDaoJdbc implements GenreDao {
         KeyHolder kh = new GeneratedKeyHolder();
 
         namedParameterJdbcOperations.update("insert into genres(name) values (:name)"
-                ,params, kh);
+                , params, kh);
 
         return kh.getKey().longValue();
     }

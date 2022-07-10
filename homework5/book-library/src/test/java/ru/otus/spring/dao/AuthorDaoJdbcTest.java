@@ -9,6 +9,7 @@ import ru.otus.spring.domain.Author;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,8 +29,8 @@ class AuthorDaoJdbcTest {
     @DisplayName("Insert author in DB")
     @Test
     void shouldInsertAuthor() {
-        var expectedAuthor = new Author(2, "Robert", "Cecil", "Martin");
-        authorDaoJdbc.insert(expectedAuthor);
+        Author expectedAuthor = new Author(2, "FirstName", "SecondName", "LastName");
+        long id = authorDaoJdbc.insert(expectedAuthor);
         List<Author> actualAuthorList = authorDaoJdbc.getAll();
         assertThat(actualAuthorList).usingFieldByFieldElementComparator().containsAnyElementsOf(Collections.singleton(expectedAuthor));
     }
@@ -39,6 +40,9 @@ class AuthorDaoJdbcTest {
     void shouldReturnExpectedAuthorList() {
         var expectedAuthor = new Author(EXISTING_AUTHOR_ID, EXISTING_AUTHOR_FIRST_NAME, EXISTING_AUTHOR_MIDDLE_NAME, EXISTING_AUTHOR_LAST_NAME);
         List<Author> actualAuthorList = authorDaoJdbc.getAll();
+        System.out.println("авторы соданные из кода "+ expectedAuthor.toString());
+
+        System.out.println("авторы полученные через дао "+ actualAuthorList.stream().map(Author::toString).collect(Collectors.joining("\n")));
         assertThat(actualAuthorList).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(expectedAuthor);
     }
 }

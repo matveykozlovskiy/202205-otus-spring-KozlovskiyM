@@ -28,7 +28,7 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public long insert(Book book) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValues(Map.of("name", book.getName(), "authorid", book.getAuthor().getId() , "genreid", book.getGenre().getId(), "releasedate", book.getReleaseDate()));
+        params.addValues(Map.of("name", book.getName(), "authorid", book.getAuthor().getId(), "genreid", book.getGenre().getId(), "releasedate", book.getReleaseDate()));
 
         KeyHolder kh = new GeneratedKeyHolder();
 
@@ -63,7 +63,12 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public Book getById(long id) {
-        return namedParameterJdbcOperations.queryForObject("select id, name, authorid, genreid, releasedate from books where id = :id"
+        return namedParameterJdbcOperations.queryForObject("select b.id, b.name, b.authorid, b.genreid, b.releasedate, " +
+                        "a.firstname as authorfirstname, a.middlename as authormiddlename, a.lastname as authorlastname, " +
+                        "g.name as genrename " +
+                        "from books b " +
+                        "join authors a on a.id = b.authorid " +
+                        "join genres g on g.id= b.genreid where b.id = :id"
                 , Map.of("id", id), new BookMapper());
     }
 

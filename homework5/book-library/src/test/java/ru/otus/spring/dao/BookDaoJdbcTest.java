@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("Books Dao should ")
 @JdbcTest
-@Import(BookDaoJdbc.class)
+@Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
+
 class BookDaoJdbcTest {
 
     private static final int EXISTING_BOOK_ID = 1;
@@ -25,20 +26,29 @@ class BookDaoJdbcTest {
     private static final LocalDate EXISTING_RELEASE_DATE = LocalDate.parse("1969-03-10");
     @Autowired
     private BookDaoJdbc bookDaoJdbc;
+    @Autowired
+    private AuthorDaoJdbc authorDaoJdbc;
+    @Autowired
+    private GenreDaoJdbc genreDaoJdbc;
 
     @DisplayName("Insert book in DB")
     @Test
     void shouldInsertBook() {
-        var expectedBook = new Book(3, "War and Peace", 3, 3, LocalDate.parse("1867-01-01"));
+        var expectedBook = new Book(2, "Test book"
+                , authorDaoJdbc.getById(EXISTING_AUTHOR_ID)
+                , genreDaoJdbc.getById(EXISTING_GENRE_ID), LocalDate.parse("1867-01-01"));
+        System.out.println(expectedBook.toString());
         bookDaoJdbc.insert(expectedBook);
-        var actualBook = bookDaoJdbc.getById(expectedBook.id());
+        var actualBook = bookDaoJdbc.getById(expectedBook.getId());
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @DisplayName("Return book by ID")
     @Test
     void shouldReturnExpectedBookById() {
-        var expectedBook = new Book(EXISTING_BOOK_ID, EXISTING_BOOK_NAME, EXISTING_AUTHOR_ID, EXISTING_GENRE_ID, EXISTING_RELEASE_DATE);
+        var expectedBook = new Book(EXISTING_BOOK_ID, EXISTING_BOOK_NAME
+                , authorDaoJdbc.getById(EXISTING_AUTHOR_ID)
+                , genreDaoJdbc.getById(EXISTING_GENRE_ID), EXISTING_RELEASE_DATE);
         var actualBook = bookDaoJdbc.getById(EXISTING_BOOK_ID);
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -56,7 +66,8 @@ class BookDaoJdbcTest {
     @DisplayName("Return book list")
     @Test
     void shouldReturnExpectedBookList() {
-        var expectedBook = new Book(EXISTING_BOOK_ID, EXISTING_BOOK_NAME, EXISTING_AUTHOR_ID, EXISTING_GENRE_ID, EXISTING_RELEASE_DATE);
+        var expectedBook = new Book(EXISTING_BOOK_ID, EXISTING_BOOK_NAME, authorDaoJdbc.getById(EXISTING_AUTHOR_ID)
+                , genreDaoJdbc.getById(EXISTING_GENRE_ID), EXISTING_RELEASE_DATE);
         List<Book> actualBookList = bookDaoJdbc.getAll();
         assertThat(actualBookList).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(expectedBook);
     }
